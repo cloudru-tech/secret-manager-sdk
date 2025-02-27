@@ -1,0 +1,1718 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Cloud.ru Secret Manager",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "SecretManagerService"
+    },
+    {
+      "name": "FolderService"
+    },
+    {
+      "name": "SecretService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/secrets": {
+      "get": {
+        "operationId": "SecretManagerService_ListSecrets",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListSecretsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parentId",
+            "description": "Обязательное поле. Идентификатор родительского сервис инстанса.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page.limit",
+            "description": "Обязательное поле. Максимальное кол-во записей в одном запросе. (Макс: 1000, по-умолчанию: 100).",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page.offset",
+            "description": "Обязательное поле. Сдвиг записей.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "labels",
+            "description": "This is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "regex",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "exact",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      },
+      "post": {
+        "operationId": "SecretManagerService_CreateSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/secretmanagerv1Secret"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/secretmanagerv1CreateSecretRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      }
+    },
+    "/v1/secrets/{secret.id}": {
+      "patch": {
+        "operationId": "SecretManagerService_UpdateSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/secretmanagerv1Secret"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secret.id",
+            "description": "Идентификатор секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "secret",
+            "description": "Обязательное поле. Обновленный секрет.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Наименование секрета."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Описание секрета."
+                },
+                "labels": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Лейблы секрета."
+                },
+                "owner": {
+                  "type": "string",
+                  "description": "Идентификатор владельца секрета."
+                },
+                "kmsKeyId": {
+                  "type": "string",
+                  "description": "Идентификатор ключа шифрования."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Дата создания секрета."
+                }
+              },
+              "title": "Обязательное поле. Обновленный секрет."
+            }
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      }
+    },
+    "/v1/secrets/{secretId}": {
+      "get": {
+        "operationId": "SecretManagerService_GetSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/secretmanagerv1Secret"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secretId",
+            "description": "Обязательное поле. Идентификатор секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      },
+      "delete": {
+        "operationId": "SecretManagerService_DestroySecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secretId",
+            "description": "Обязательное поле. Идентификатор секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "force",
+            "description": "Force влияет на то, что если секрет используется\nв других ресурсах или имеет активные версии, то удаление\nбудет запрещено. Force разрешает удаление ключей, которые используются.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      }
+    },
+    "/v1/secrets/{secretId}/usage": {
+      "get": {
+        "operationId": "SecretManagerService_GetUsage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetUsageResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secretId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      }
+    },
+    "/v1/secrets/{secretId}/versions": {
+      "get": {
+        "operationId": "SecretManagerService_ListSecretVersions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListSecretVersionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secretId",
+            "description": "Обязательное поле. Идентификатор секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page.limit",
+            "description": "Обязательное поле. Максимальное кол-во записей в одном запросе. (Макс: 1000, по-умолчанию: 100).",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page.offset",
+            "description": "Обязательное поле. Сдвиг записей.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      },
+      "post": {
+        "operationId": "SecretManagerService_CreateSecretVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/secretmanagerv1SecretVersion"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secretId",
+            "description": "Обязательное поле. Идентификатор секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SecretManagerServiceCreateSecretVersionBody"
+            }
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      }
+    },
+    "/v1/secrets/{secretId}/versions/{secretVersionId}": {
+      "get": {
+        "operationId": "SecretManagerService_GetSecretVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/secretmanagerv1SecretVersion"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secretId",
+            "description": "Обязательное поле. Идентификатор секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "secretVersionId",
+            "description": "Обязательное поле. Идентификатор версии секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      },
+      "delete": {
+        "operationId": "SecretManagerService_DestroySecretVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/secretmanagerv1SecretVersion"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secretId",
+            "description": "Обязательное поле. Идентификатор секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "secretVersionId",
+            "description": "Обязательное поле. Идентификатор версии секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      }
+    },
+    "/v1/secrets/{secretId}/versions/{secretVersionId}/disable": {
+      "patch": {
+        "operationId": "SecretManagerService_DisableSecretVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/secretmanagerv1SecretVersion"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secretId",
+            "description": "Обязательное поле. Идентификатор секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "secretVersionId",
+            "description": "Обязательное поле. Идентификатор версии секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      }
+    },
+    "/v1/secrets/{secretId}/versions/{secretVersionId}/enable": {
+      "patch": {
+        "operationId": "SecretManagerService_EnableSecretVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/secretmanagerv1SecretVersion"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secretId",
+            "description": "Обязательное поле. Идентификатор секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "secretVersionId",
+            "description": "Обязательное поле. Идентификатор версии секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      }
+    },
+    "/v1/secrets/{secretId}/versions/{secretVersionId}/payload": {
+      "get": {
+        "operationId": "SecretManagerService_AccessSecretVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SecretPayload"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secretId",
+            "description": "Обязательное поле. Идентификатор секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "secretVersionId",
+            "description": "Обязательное поле. Идентификатор версии секрета.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretManagerService"
+        ]
+      }
+    },
+    "/v2/folder/{path}": {
+      "get": {
+        "operationId": "FolderService_GetEntries",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2GetEntriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the absolute path to the folder.\ne.g. folder/subfolder.\nIf the path is empty, the method returns the root folder.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectId",
+            "description": "ProjectId is the ID of the customer project instance.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FolderService"
+        ]
+      },
+      "delete": {
+        "operationId": "FolderService_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the absolute path to the folder, e.g. folder/subfolder.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectId",
+            "description": "ProjectId is the ID of the customer project instance.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "force",
+            "description": "Force is a flag that indicates whether to delete the folder with all its content.\nThe delete method returns an error if the folder is not empty.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "FolderService"
+        ]
+      },
+      "post": {
+        "operationId": "FolderService_Create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2CreateFolderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the parent folders path.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2FolderServiceCreateBody"
+            }
+          }
+        ],
+        "tags": [
+          "FolderService"
+        ]
+      },
+      "put": {
+        "operationId": "FolderService_Update",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2UpdateFolderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the parent folders path.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectId",
+            "description": "ProjectId is the ID of the customer project instance.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "description": "Name is the name of the folder.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FolderService"
+        ]
+      }
+    },
+    "/v2/secret/{path}": {
+      "get": {
+        "operationId": "SecretService_Get",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2GetSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the path to the secret, including the folder paths with the secret name.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectId",
+            "description": "ProjectId is the id of the project.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretService"
+        ]
+      },
+      "delete": {
+        "operationId": "SecretService_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the path to the secret, including the folder paths with the secret name.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectId",
+            "description": "ProjectId is the id of the project.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "force",
+            "description": "Force affects the fact that if the secret is used in other resources\nor has active versions, then deletion will be prohibited. Force allows\ndeletion of keys that are in use.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "SecretService"
+        ]
+      },
+      "post": {
+        "operationId": "SecretService_Create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2CreateSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the name of the Secret, including the full path.\nIf secret is creating on root level, path should contain only the name of the Secret.\ne.g. folder/my_secret",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2SecretServiceCreateBody"
+            }
+          }
+        ],
+        "tags": [
+          "SecretService"
+        ]
+      },
+      "put": {
+        "operationId": "SecretService_Update",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2UpdateSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the path to the secret, including the folder paths with the secret name.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2SecretServiceUpdateBody"
+            }
+          }
+        ],
+        "tags": [
+          "SecretService"
+        ]
+      }
+    },
+    "/v2/secret/{path}/access": {
+      "get": {
+        "summary": "Access is used to retrieve a secret value of given secret version.",
+        "operationId": "SecretService_Access",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2AccessSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the path to the secret, including the folder paths with the secret name.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectId",
+            "description": "ProjectId is the id of the project.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "description": "Version is the version number of the secret.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "jsonPath",
+            "description": "JsonPath is the path to the secret data.\nThe secret payload should be in JSON format, in other case the error will be returned.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretService"
+        ]
+      }
+    },
+    "/v2/secret/{path}/search": {
+      "get": {
+        "summary": "Search is used to retrieve a list of secrets by\ngiven filters, located in the folder path. It will return recursively\nall secrets in the folder and its subfolders if the subject have access to that path.",
+        "operationId": "SecretService_Search",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2SearchSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the path to the folder where the secrets are located.\nIf not specified, will return all secrets in the root and its subfolders.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectId",
+            "description": "ProjectId is the id of the project.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "depth",
+            "description": "Depth is the depth of the search.\nIt represents the number of folders to search in recursively.\nIf not specified, will search in the current folder only.\nIf set to -1, it will search in all folders recursively from the specified path.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "labels",
+            "description": "This is a request variable of the map type. The query format is \"map_name[key]=value\", e.g. If the map name is Age, the key type is string, and the value type is integer, the query parameter is expressed as Age[\"bob\"]=18",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "regex",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "exact",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretService"
+        ]
+      }
+    },
+    "/v2/secret/{path}/version": {
+      "post": {
+        "operationId": "SecretService_AddVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2AddVersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the path to the secret, including the folder paths with the secret name.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SecretServiceAddVersionBody"
+            }
+          }
+        ],
+        "tags": [
+          "SecretService"
+        ]
+      }
+    },
+    "/v2/secret/{path}/version/{version}": {
+      "delete": {
+        "operationId": "SecretService_DestroyVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2DestroyVersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the path to the secret, including the folder paths with the secret name.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "description": "Version is the version number of the secret.",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "projectId",
+            "description": "ProjectId is the id of the project.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretService"
+        ]
+      },
+      "put": {
+        "operationId": "SecretService_UpdateVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2UpdateVersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "Path is the path to the secret, including the folder paths with the secret name.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "description": "Version is the version number of the secret.",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "projectId",
+            "description": "ProjectId is the id of the project.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "enabled",
+            "description": "Enabled is the state of the version.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "SecretService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "SecretManagerServiceCreateSecretVersionBody": {
+      "type": "object",
+      "properties": {
+        "payload": {
+          "$ref": "#/definitions/v1SecretPayload",
+          "description": "Обязательное поле. Секретные данные."
+        }
+      }
+    },
+    "SecretServiceAddVersionBody": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ProjectId is the id of the project."
+        },
+        "payload": {
+          "type": "string",
+          "format": "byte",
+          "description": "Payload is the secret data, which should be encrypted and stored."
+        }
+      },
+      "description": "AddVersionRequest is the request of the AddVersion method."
+    },
+    "corev2Secret": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Id is the Secret identifier."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name is the name of the Secret."
+        },
+        "path": {
+          "type": "string",
+          "description": "Path is the path to secret, including the\nfolder paths with the secret name."
+        },
+        "folderId": {
+          "type": "string",
+          "description": "FolderId is the id of the folder where the secret is located."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description is the description of the Secret."
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Labels are key-value pairs that allow you to organize your secrets."
+        },
+        "serviceInstanceId": {
+          "type": "string",
+          "description": "ServiceInstanceId is the id of the service instance."
+        },
+        "projectId": {
+          "type": "string",
+          "description": "ProjectId is the id of the project."
+        },
+        "kmsKeyId": {
+          "type": "string",
+          "description": "KmsKeyId is the id of the KMS key used to encrypt the secret."
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/corev2SecretVersion"
+          },
+          "description": "Versions is the list of secret version.\nThis property is unavailable on list methods."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "CreatedAt is the time when the Secret was created."
+        }
+      },
+      "description": "Secret is the representation of a secret."
+    },
+    "corev2SecretVersion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Id is the version number."
+        },
+        "state": {
+          "$ref": "#/definitions/v2VersionState",
+          "description": "State represents the state of the version."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "CreatedAt is the date, when version is created."
+        }
+      },
+      "description": "SecretVersion is the representation of a secret version."
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "secretmanagerv1CreateSecretRequest": {
+      "type": "object",
+      "properties": {
+        "parentId": {
+          "type": "string",
+          "description": "Обязательное поле. Идентификатор родительского сервис инстанса."
+        },
+        "name": {
+          "type": "string",
+          "description": "Наименование секрета."
+        },
+        "description": {
+          "type": "string",
+          "description": "Описание секрета."
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Лейблы секрета."
+        },
+        "kmsKeyId": {
+          "type": "string",
+          "description": "Идентификатор ключа шифрования."
+        },
+        "payload": {
+          "$ref": "#/definitions/v1SecretPayload",
+          "description": "Секретные данные."
+        }
+      }
+    },
+    "secretmanagerv1Secret": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Идентификатор секрета."
+        },
+        "name": {
+          "type": "string",
+          "description": "Наименование секрета."
+        },
+        "description": {
+          "type": "string",
+          "description": "Описание секрета."
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Лейблы секрета."
+        },
+        "owner": {
+          "type": "string",
+          "description": "Идентификатор владельца секрета."
+        },
+        "kmsKeyId": {
+          "type": "string",
+          "description": "Идентификатор ключа шифрования."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата создания секрета."
+        }
+      }
+    },
+    "secretmanagerv1SecretVersion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Идентификатор версии секрета."
+        },
+        "secretId": {
+          "type": "string",
+          "description": "Идентификатор секрета."
+        },
+        "state": {
+          "$ref": "#/definitions/v1State",
+          "description": "Состояние версии секрета."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата создания версии секрета."
+        }
+      }
+    },
+    "v1GetUsageResponse": {
+      "type": "object",
+      "properties": {
+        "usage": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Usage"
+          }
+        }
+      },
+      "description": "GetUsageResponse - список ресурсов, использующих секрет."
+    },
+    "v1ListSecretVersionsResponse": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/secretmanagerv1SecretVersion"
+          },
+          "description": "Версии секрета."
+        }
+      }
+    },
+    "v1ListSecretsResponse": {
+      "type": "object",
+      "properties": {
+        "secrets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/secretmanagerv1Secret"
+          },
+          "description": "Секреты."
+        }
+      }
+    },
+    "v1Page": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Обязательное поле. Максимальное кол-во записей в одном запросе. (Макс: 1000, по-умолчанию: 100)."
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Обязательное поле. Сдвиг записей."
+        }
+      }
+    },
+    "v1SecretPayload": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "byte",
+          "description": "Секретные данные."
+        }
+      }
+    },
+    "v1State": {
+      "type": "string",
+      "enum": [
+        "STATE_UNSPECIFIED",
+        "ENABLED",
+        "DISABLED",
+        "DESTROYED"
+      ],
+      "default": "STATE_UNSPECIFIED"
+    },
+    "v1Usage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Id - идентификатор ресурса."
+        },
+        "type": {
+          "type": "string",
+          "description": "Type - идентификатор типа ресурса."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name - имя ресурса."
+        }
+      },
+      "description": "Usage - ресурс, использующий секрет."
+    },
+    "v2AccessSecretResponse": {
+      "type": "object",
+      "properties": {
+        "secret": {
+          "$ref": "#/definitions/corev2Secret",
+          "description": "Secret is the secret data."
+        },
+        "version": {
+          "$ref": "#/definitions/corev2SecretVersion",
+          "description": "Version is the secret version."
+        },
+        "payload": {
+          "type": "string",
+          "format": "byte",
+          "description": "Payload is the secret data."
+        }
+      },
+      "description": "AccessSecretResponse is the response of the AccessSecret method."
+    },
+    "v2AddVersionResponse": {
+      "type": "object",
+      "properties": {
+        "secret": {
+          "$ref": "#/definitions/corev2Secret"
+        },
+        "version": {
+          "$ref": "#/definitions/corev2SecretVersion"
+        }
+      },
+      "description": "AddVersionResponse is the response of the AddVersion method."
+    },
+    "v2CreateFolderResponse": {
+      "type": "object",
+      "properties": {
+        "folder": {
+          "$ref": "#/definitions/v2Folder"
+        }
+      },
+      "description": "CreateFolderResponse is the response message for the CreateFolder method."
+    },
+    "v2CreateSecretResponse": {
+      "type": "object",
+      "properties": {
+        "secret": {
+          "$ref": "#/definitions/corev2Secret"
+        }
+      },
+      "description": "CreateSecretResponse is the response of the CreateSecret method."
+    },
+    "v2DestroyVersionResponse": {
+      "type": "object",
+      "properties": {
+        "secret": {
+          "$ref": "#/definitions/corev2Secret"
+        }
+      },
+      "description": "DestroyVersionResponse is the response of the DestroyVersion method."
+    },
+    "v2EntryType": {
+      "type": "string",
+      "enum": [
+        "ENTRY_TYPE_FOLDER",
+        "ENTRY_TYPE_SECRET"
+      ],
+      "default": "ENTRY_TYPE_FOLDER",
+      "description": "EntryType is the type of the folder entry."
+    },
+    "v2Folder": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string"
+        },
+        "serviceInstanceId": {
+          "type": "string"
+        },
+        "projectId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "description": "Folder represents a folder in the system."
+    },
+    "v2FolderEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/v2EntryType"
+        }
+      },
+      "description": "FolderEntry represents a folder entry in the system."
+    },
+    "v2FolderServiceCreateBody": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ProjectId is the ID of the customer project instance."
+        }
+      },
+      "description": "CreateFolderRequest is the request message for the CreateFolder method."
+    },
+    "v2GetEntriesResponse": {
+      "type": "object",
+      "properties": {
+        "folder": {
+          "$ref": "#/definitions/v2Folder",
+          "description": "Folder - is the folder entity by given path.\nIf the path was not specified, the entries will return\nat root level and the folder will be nil."
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2FolderEntry"
+          }
+        }
+      },
+      "description": "GetEntriesResponse is the response message for the GetEntries method."
+    },
+    "v2GetSecretResponse": {
+      "type": "object",
+      "properties": {
+        "secret": {
+          "$ref": "#/definitions/corev2Secret"
+        }
+      }
+    },
+    "v2SearchSecretResponse": {
+      "type": "object",
+      "properties": {
+        "secrets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/corev2Secret"
+          },
+          "description": "Secrets is the list secrets, which match the search criteria."
+        }
+      },
+      "description": "SearchSecretResponse is the response of the Search method."
+    },
+    "v2SecretServiceCreateBody": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ProjectId is the id of the project."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description is the description of the Secret."
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Labels are key-value pairs that allow you to organize your secrets."
+        },
+        "kmsKeyId": {
+          "type": "string",
+          "description": "KmsKeyId is the id of the KMS key used to encrypt the secret.\nIf not specified, will use the cloud.ru managed KMS key."
+        },
+        "payload": {
+          "type": "string",
+          "format": "byte",
+          "description": "Payload is the secret data, which should be encrypted and stored."
+        }
+      },
+      "description": "CreateSecretRequest is the request of the CreateSecret method."
+    },
+    "v2SecretServiceUpdateBody": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ProjectId is the id of the project."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name is the name of the Secret."
+        },
+        "folderPath": {
+          "type": "string",
+          "description": "FolderPath is the new path for the secret."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description is the description of the Secret."
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Labels are key-value pairs that allow you to organize your secrets."
+        }
+      },
+      "description": "UpdateSecretRequest is the request of the UpdateSecret method."
+    },
+    "v2UpdateFolderResponse": {
+      "type": "object",
+      "properties": {
+        "folder": {
+          "$ref": "#/definitions/v2Folder"
+        }
+      },
+      "description": "UpdateFolderResponse is the response message for the UpdateFolder method."
+    },
+    "v2UpdateSecretResponse": {
+      "type": "object",
+      "properties": {
+        "secret": {
+          "$ref": "#/definitions/corev2Secret"
+        }
+      },
+      "description": "UpdateSecretResponse is the response of the UpdateSecret method."
+    },
+    "v2UpdateVersionResponse": {
+      "type": "object",
+      "properties": {
+        "secret": {
+          "$ref": "#/definitions/corev2Secret"
+        },
+        "version": {
+          "$ref": "#/definitions/corev2SecretVersion"
+        }
+      },
+      "description": "UpdateVersionResponse is the response of the UpdateVersion method."
+    },
+    "v2VersionState": {
+      "type": "string",
+      "enum": [
+        "STATE_UNSPECIFIED",
+        "ENABLED",
+        "DISABLED",
+        "DESTROYED"
+      ],
+      "default": "STATE_UNSPECIFIED"
+    }
+  }
+}
