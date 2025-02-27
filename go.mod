@@ -1,6 +1,6 @@
 module github.com/cloudru-tech/secret-manager-sdk
 
-go 1.24
+go 1.23.0
 
 require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20250224174004-546df14abb99
